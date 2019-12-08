@@ -12,6 +12,7 @@ namespace Simple2D
     {
         static Core.Engine engine;
         static Tileset player;
+        static Point PlayerPos;
 
         /// <summary>
         /// The main entry point for the application.
@@ -30,6 +31,7 @@ namespace Simple2D
             {
                 e.KeyPress += e_KeyPress;
                 e.KeyDown += e_KeyDown;
+                PlayerPos = new Point(100, 100);
             };
 
             int i = 0;
@@ -51,7 +53,7 @@ namespace Simple2D
                                       e.Form.Font,
                                       Brushes.Blue, 0, 15);
 
-                player.DrawCurrentTile(e.Graphics, new Point(100, 100));
+                player.DrawCurrentTile(e.Graphics, PlayerPos);
             };
             engine.Update += (object sender, Core.UpdateEventArgs e) =>
             {
@@ -76,15 +78,19 @@ namespace Simple2D
             {
                 case Keys.Up:
                     player.SetCurrTileColumn(1);
+                    if (PlayerPos.Y > 0) PlayerPos.Y -= 8;
                     break;
                 case Keys.Down:
                     player.SetCurrTileColumn(0);
+                    PlayerPos.Y += 8;
                     break;
                 case Keys.Left:
                     player.SetCurrTileColumn(3);
+                    if (PlayerPos.X > 0) PlayerPos.X -= 8;
                     break;
                 case Keys.Right:
                     player.SetCurrTileColumn(2);
+                    PlayerPos.X += 8;
                     break;
             }
         }
