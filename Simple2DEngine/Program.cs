@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Simple2D.Core;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -17,9 +18,11 @@ namespace Simple2D
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
+
+            Tileset player = new Tileset(@"Assets\Character.png", 4, 4);
+
             Core.Engine engine = new Core.Engine();
-            engine.FPSLimit = 35;
+            engine.FPSLimit = 20;
             engine.Setup += (object sender, Form e) =>
             {
 
@@ -27,6 +30,7 @@ namespace Simple2D
 
             int i = 0;
             string updateText = "";
+            int frameCount = 0;
             engine.Draw += (object sender, Core.DrawEventArgs e) =>
             {
                 i = (i + 1) % 256;
@@ -43,15 +47,27 @@ namespace Simple2D
                 e.Graphics.DrawString(updateText,
                                       e.Form.Font,
                                       Brushes.Blue, 0, 15);
+                e.Graphics.DrawString("Frame count " + (++frameCount),
+                                      e.Form.Font,
+                                      Brushes.Red, 0, 30);
+
+                player.DrawCurrentTile(e.Graphics, new Point(100, 100));
             };
+            int tileWalk = 0;
             engine.Update += (object sender, Core.UpdateEventArgs e) =>
             {
                 updateText = "Upd: " + e.LastUpdateTimer + "FPS " + engine.GetFPS(e.LastUpdateTimer);
+                if (tileWalk++ > 5)
+                {
+                    player.StepCurrTileY();
+                    tileWalk = 0;
+                }
             };
 
             engine.Show(new Core.WindowInfo()
             {
-                FullScreen = true
+                FullScreen = false,
+                Size = new Size(480, 320)
             });
         }
     }

@@ -37,6 +37,7 @@ namespace Simple2D.Core
         Thread thdDraw;
 
         myForm form = null;
+        Stopwatch swTotal = new Stopwatch();
         private class myForm : Form
         {
             public myForm()
@@ -47,8 +48,8 @@ namespace Simple2D.Core
         }
         public void Show(WindowInfo Info)
         {
-            Info.FullScreen = true;
-            Info.Size = new Size(10, 10);
+            //Info.FullScreen = true;
+            //Info.Size = new Size(10, 10);
 
             Info.Validate();
 
@@ -96,6 +97,7 @@ namespace Simple2D.Core
                 Draw(this, dea);
             };
 
+            swTotal.Start();
             Application.Run(form);
             stopThreads = true;
 
@@ -125,7 +127,8 @@ namespace Simple2D.Core
 
                 if (Update != null) Update(this, new UpdateEventArgs()
                 {
-                    LastUpdateTimer = last
+                    LastUpdateTimer = last,
+                    TotalTime = swTotal.Elapsed
                 });
 
                 sw.Stop();

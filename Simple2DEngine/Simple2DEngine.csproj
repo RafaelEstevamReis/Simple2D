@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Core\DrawEventArgs.cs" />
     <Compile Include="Core\Engine.cs" />
+    <Compile Include="Core\Tileset.cs" />
     <Compile Include="Core\UpdateEventArgs.cs" />
     <Compile Include="Core\WindowInfo.cs" />
     <Compile Include="Program.cs" />
