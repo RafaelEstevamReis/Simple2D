@@ -13,7 +13,11 @@ namespace Simple2D.Core
 
         public void Validate()
         {
-            
+            if (FullScreen)
+            {
+                if (Size.Height != 0 || Size.Width != 0)
+                    throw new InvalidOperationException("Size must be ZERO in FullScreen monde");
+            }
         }
     }
 }

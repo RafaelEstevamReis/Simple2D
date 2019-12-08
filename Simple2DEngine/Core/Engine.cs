@@ -43,7 +43,7 @@ namespace Simple2D.Core
             public myForm()
                 : base()
             {
-                
+                DoubleBuffered = true;
             }
         }
         public void Show(WindowInfo Info)
@@ -89,6 +89,8 @@ namespace Simple2D.Core
             };
             form.Paint += (object sender, PaintEventArgs e) =>
             {
+                e.Graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Bilinear; // is not shrinking
                 DrawEventArgs dea = new DrawEventArgs()
                 {
                     Form = form,
@@ -119,6 +121,7 @@ namespace Simple2D.Core
             TimeSpan last = new TimeSpan();
             sw.Start();
             swUpdateTimer.Start();
+            int frameCount = 0;
             while (!stopThreads)
             {
                 sw.Restart();
@@ -128,7 +131,8 @@ namespace Simple2D.Core
                 if (Update != null) Update(this, new UpdateEventArgs()
                 {
                     LastUpdateTimer = last,
-                    TotalTime = swTotal.Elapsed
+                    TotalTime = swTotal.Elapsed,
+                    FrameCount = ++frameCount
                 });
 
                 sw.Stop();

@@ -10,6 +10,9 @@ namespace Simple2D
 {
     static class Program
     {
+        static Core.Engine engine;
+        static Tileset player;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -19,18 +22,18 @@ namespace Simple2D
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            Tileset player = new Tileset(@"Assets\Character.png", 4, 4);
+            player = new Tileset(@"Assets\Character.png", 4, 4);
 
-            Core.Engine engine = new Core.Engine();
-            engine.FPSLimit = 20;
+            engine = new Core.Engine();
+            engine.FPSLimit = 30;
             engine.Setup += (object sender, Form e) =>
             {
-
+                e.KeyPress += e_KeyPress;
+                e.KeyDown += e_KeyDown;
             };
 
             int i = 0;
             string updateText = "";
-            int frameCount = 0;
             engine.Draw += (object sender, Core.DrawEventArgs e) =>
             {
                 i = (i + 1) % 256;
@@ -47,28 +50,47 @@ namespace Simple2D
                 e.Graphics.DrawString(updateText,
                                       e.Form.Font,
                                       Brushes.Blue, 0, 15);
-                e.Graphics.DrawString("Frame count " + (++frameCount),
-                                      e.Form.Font,
-                                      Brushes.Red, 0, 30);
 
                 player.DrawCurrentTile(e.Graphics, new Point(100, 100));
             };
-            int tileWalk = 0;
             engine.Update += (object sender, Core.UpdateEventArgs e) =>
             {
                 updateText = "Upd: " + e.LastUpdateTimer + "FPS " + engine.GetFPS(e.LastUpdateTimer);
-                if (tileWalk++ > 5)
+                // Should step based on time, not in FrameCount
+                if (e.FrameCount % 5 == 0)
                 {
                     player.StepCurrTileY();
-                    tileWalk = 0;
                 }
             };
 
             engine.Show(new Core.WindowInfo()
             {
-                FullScreen = false,
-                Size = new Size(480, 320)
+                FullScreen = true,
+                //Size = new Size(480, 320)
             });
+        }
+
+        static void e_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Up:
+                    player.SetCurrTileColumn(1);
+                    break;
+                case Keys.Down:
+                    player.SetCurrTileColumn(0);
+                    break;
+                case Keys.Left:
+                    player.SetCurrTileColumn(3);
+                    break;
+                case Keys.Right:
+                    player.SetCurrTileColumn(2);
+                    break;
+            }
+        }
+        static void e_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            
         }
     }
 }

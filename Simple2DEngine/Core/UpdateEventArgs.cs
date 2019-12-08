@@ -9,5 +9,6 @@ namespace Simple2D.Core
     {
         public TimeSpan LastUpdateTimer { get; set; }
         public TimeSpan TotalTime { get; set; }
+        public int FrameCount { get; set; }
     }
 }
