@@ -12,7 +12,7 @@ namespace Simple2D
     {
         static Core.Engine engine;
         static Tileset player;
-        static Point PlayerPos;
+        static PointF PlayerPos;
 
         /// <summary>
         /// The main entry point for the application.
@@ -45,7 +45,7 @@ namespace Simple2D
                 var rect = engine.GetTileSize(i % 30, Math.Abs(30 - (i % 60)), 30, 30);
                 e.Graphics.FillRectangle(Brushes.Blue, rect);
 
-                e.Graphics.DrawString("Draw " + engine.LastDrawTime.ToString() + " FPS " + engine.GetFPS(engine.LastDrawTime),
+                e.Graphics.DrawString("Draw " + engine.LastDrawTime.ToString() + " FPS " + engine.RealDrawFPS,
                                       e.Form.Font,
                                       Brushes.Red, 0, 0);
 
@@ -57,42 +57,47 @@ namespace Simple2D
             };
             engine.Update += (object sender, Core.UpdateEventArgs e) =>
             {
-                updateText = "Upd: " + e.LastUpdateTimer + "FPS " + engine.GetFPS(e.LastUpdateTimer);
+                updateText = "Upd: " + e.LastUpdateTimer + "FPS " + engine.RealUpdateFPS;
                 // Should step based on time, not in FrameCount
                 if (e.FrameCount % 5 == 0)
                 {
                     player.StepCurrTileY();
                 }
+
+                float speed = e.LastUpdateTimer.Milliseconds / 30f;
+
+                if (engine[Keys.Up])
+                {
+                    player.SetCurrTileColumn(1);
+                    PlayerPos.Y -= speed;
+                }
+                if (engine[Keys.Down])
+                {
+                    player.SetCurrTileColumn(0);
+                    PlayerPos.Y += speed;
+                }
+                if (engine[Keys.Right])
+                {
+                    player.SetCurrTileColumn(2);
+                    PlayerPos.X += speed;
+                }
+                if (engine[Keys.Left])
+                {
+                    player.SetCurrTileColumn(3);
+                    PlayerPos.X -= speed;
+                }
+
             };
 
             engine.Show(new Core.WindowInfo()
             {
-                FullScreen = true,
-                //Size = new Size(480, 320)
+                FullScreen = false,
+                Size = new Size(480, 320)
             });
         }
 
         static void e_KeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode)
-            {
-                case Keys.Up:
-                    player.SetCurrTileColumn(1);
-                    if (PlayerPos.Y > 0) PlayerPos.Y -= 8;
-                    break;
-                case Keys.Down:
-                    player.SetCurrTileColumn(0);
-                    PlayerPos.Y += 8;
-                    break;
-                case Keys.Left:
-                    player.SetCurrTileColumn(3);
-                    if (PlayerPos.X > 0) PlayerPos.X -= 8;
-                    break;
-                case Keys.Right:
-                    player.SetCurrTileColumn(2);
-                    PlayerPos.X += 8;
-                    break;
-            }
         }
         static void e_KeyPress(object sender, KeyPressEventArgs e)
         {

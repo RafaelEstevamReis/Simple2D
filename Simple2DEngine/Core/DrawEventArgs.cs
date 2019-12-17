@@ -10,6 +10,7 @@ namespace Simple2D.Core
     {
         public System.Windows.Forms.Form Form { get; set; }
         public System.Drawing.Graphics Graphics { get; set; }
+        public TimeSpan LastElapsed { get; set; }
 
         public void FillColor(System.Drawing.Color color)
         {

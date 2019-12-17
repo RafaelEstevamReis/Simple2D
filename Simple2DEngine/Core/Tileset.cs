@@ -82,7 +82,11 @@ namespace Simple2D.Core
             return bmp;
         }
 
-        public void DrawCurrentTile(Graphics g,Point ScreenCoordinates)
+        public void DrawCurrentTile(Graphics g, PointF ScreenCoordinates)
+        {
+            DrawCurrentTile(g, new Point((int)ScreenCoordinates.X, (int)ScreenCoordinates.Y));
+        }
+        public void DrawCurrentTile(Graphics g, Point ScreenCoordinates)
         {
             DrawTile(g, ScreenCoordinates, curretTile);
         }
